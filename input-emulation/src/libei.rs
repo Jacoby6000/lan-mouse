@@ -232,7 +232,18 @@ impl<'a> Emulation for LibeiEmulation<'a> {
                         d.frame(self.serial.load(Ordering::SeqCst), now);
                     }
                 }
-                KeyboardEvent::Modifiers { .. } => {}
+                KeyboardEvent::Modifiers {
+                    depressed,
+                    latched,
+                    locked,
+                    group,
+                } => {
+                    let keyboard_device = self.devices.keyboard.read().unwrap();
+                    if let Some((d, k)) = keyboard_device.as_ref() {
+                        k.modifiers(depressed, latched, locked, group);
+                        d.frame(self.serial.load(Ordering::SeqCst), now);
+                    }
+                }
             },
         }
         self.context

@@ -363,6 +363,7 @@ fn event_tap_thread(
         cg_events_of_interest,
         |_proxy: CGEventTapProxy, event_type: CGEventType, cg_ev: &CGEvent| {
             log::trace!("Got event from tap: {event_type:?}");
+
             let mut state = client_state.blocking_lock();
             let mut client = None;
             let mut res_events = vec![];
